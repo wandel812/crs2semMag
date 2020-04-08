@@ -1,0 +1,44 @@
+\begin{thebibliography}{1}
+\def\selectlanguageifdefined#1{
+\expandafter\ifx\csname date#1\endcsname\relax
+\else\selectlanguage{#1}\fi}
+\providecommand*{\href}[2]{{\small #2}}
+\providecommand*{\url}[1]{{\small #1}}
+\providecommand*{\BibUrl}[1]{\url{#1}}
+\providecommand{\BibAnnote}[1]{}
+\providecommand*{\BibEmph}[1]{#1}
+\ProvideTextCommandDefault{\cyrdash}{\hbox to.8em{--\hss--}}
+\providecommand*{\BibDash}{\ifdim\lastskip>0pt\unskip\nobreak\hskip.2em\fi
+\cyrdash\hskip.2em\ignorespaces}
+
+\bibitem{OpenfoamWiki}
+\selectlanguageifdefined{russian}
+OpenFOAM Wikipedia. \BibDash
+\newblock URL: \BibUrl{https://ru.wikipedia.org/wiki/OpenFOAM} ({дата
+  обращения}: 08.05.2020).
+
+\bibitem{OpenfoamUserGuide}
+\selectlanguageifdefined{russian}
+Официальный сайт OpenFOAM. User guide. \BibDash
+\newblock URL: \BibUrl{https://cfd.direct/openfoam/user-guide/} ({дата
+  обращения}: 08.05.2020).
+
+\bibitem{ParaviewAbout}
+\selectlanguageifdefined{russian}
+Официальный сайт Paraview. About. \BibDash
+\newblock URL: \BibUrl{https://www.paraview.org/overview/} ({дата
+  обращения}: 08.05.2020).
+
+\bibitem{ParaviewWiki}
+\selectlanguageifdefined{russian}
+Paraview. Wikipedia. \BibDash
+\newblock URL: \BibUrl{https://www.paraview.org/overview/} ({дата
+  обращения}: 08.05.2020).
+
+\bibitem{ParaviewAndPython}
+\selectlanguageifdefined{russian}
+Официальный сайт Paraview. Paraview and Python. \BibDash
+\newblock URL: \BibUrl{https://www.paraview.org/Wiki/ParaView_and_Python}
+  ({дата обращения}: 08.05.2020).
+
+\end{thebibliography}
