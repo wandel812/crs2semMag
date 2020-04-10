@@ -41,4 +41,10 @@ Paraview. Wikipedia. \BibDash
 \newblock URL: \BibUrl{https://www.paraview.org/Wiki/ParaView_and_Python}
   ({дата обращения}: 08.05.2020).
 
+\bibitem{Helyx}
+\selectlanguageifdefined{russian}
+Официальный сайт Helyx. Products. Helyx OS. \BibDash
+\newblock URL: \BibUrl{https://engys.com/products/helyx-os} ({дата
+  обращения}: 09.05.2020).
+
 \end{thebibliography}
