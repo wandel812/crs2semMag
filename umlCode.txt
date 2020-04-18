@@ -1,0 +1,130 @@
+--------------------
+UseCase Diagram 
+--------------------
+
+@startuml
+actor "Пользователь" as user
+user-->(Сохр./Загр. \n примера из БД)
+user-->(Добавл./Удал. \n источника данных \n из примера)
+user-->(Построение \n графиков примера)
+user-->(Экспорт \n построенных графиков \n в нужный формат)
+@enduml
+
+--------------------
+Class Diagraim
+--------------------
+
+-- a) Data-Controller
+
+@startuml
+class Data {}
+hide Data members
+
+class ExpData{
+  -id: int 
+  +data: Data
+} 
+hide ExpData method
+
+class DataList {
+  -DataList: ExpData[]
+  +addData(Data): void
+  +removeData(): void
+}
+
+class Controller {}
+hide Controller members
+
+
+Controller -- ExpData
+Controller -- DataList
+
+ExpData "0..*" --o "1" DataList
+Data --* "1"  ExpData
+@enduml
+ 
+
+-- b) DB-AppUtils-Controller
+
+@startuml
+class Controller {}
+hide Controller members
+
+class Database {
+  +readFromDatabase(): DAO
+  +writeToDatabase(DAO): void
+}
+hide Database fields
+
+class DAO {}
+hide DAO members
+
+class ApplicationUtils <<static>> {
+  readDataFromFile(): DTO
+  readApplictaionSettings(): void
+}
+hide ApplicationUtils fields
+
+class DTO {}
+hide DTO members
+
+
+Controller "1" o-- Database
+(Controller, ApplicationUtils) . DTO
+(Controller, Database) . DAO
+@enduml
+
+
+-- c) Case-Operaion-Controller
+
+@startuml
+class Case {
+  -id: int
+  +dataList: DataList
+  +operationHistory: OperationHistory
+}
+hide Case method
+
+interface Operation {
+  +execute(): void
+}
+hide Operation fields
+
+class Operation1 {
+  -params
+  +Operation1(params)
+  +execute(): void 
+}
+
+class Operation2 {
+  -params
+  +Operation2(params)
+  +execute(): void
+}
+
+class OperationInvoker {
+  -opertaion
+  +setOperation(Operation): void
+  +executeOperation(): void
+}
+
+class OperationHistory {
+  -history: Operation[]
+  +push(Operation): void
+  +pop(): Operation
+}
+
+class Controller {}
+hide Controller members
+
+Controller "1" o-- OperationInvoker
+Controller "1" o-- Case
+Controller -- OperationHistory
+
+Operation --o "1" OperationInvoker
+Operation <|.. Operation1
+Operation <|.. Operation2
+Operation "*" --o "1" OperationHistory
+
+Case "1" o-- OperationHistory
+@enduml

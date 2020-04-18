@@ -45,6 +45,20 @@ Paraview. Wikipedia. \BibDash
 \selectlanguageifdefined{russian}
 Официальный сайт Helyx. Products. Helyx OS. \BibDash
 \newblock URL: \BibUrl{https://engys.com/products/helyx-os} ({дата
-  обращения}: 09.05.2020).
+  обращения}: 10.05.2020).
+
+\bibitem{Ansa}
+\selectlanguageifdefined{russian}
+Официальный сайт компании Beta. Продукт ANSA.
+  \BibDash
+\newblock URL: \BibUrl{http://www.beta-cae.gr/ansa.htm} ({дата
+  обращения}: 11.05.2020).
+
+\bibitem{umlDistilled}
+\selectlanguageifdefined{russian}
+\BibEmph{Фаулер,~Мартин}. UML. Основы, 3-е издание.
+  \BibDash
+\newblock Спб:Символ-Плюс, 2004. \BibDash
+\newblock 192~{с.}
 
 \end{thebibliography}
