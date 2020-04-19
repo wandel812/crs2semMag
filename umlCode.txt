@@ -11,7 +11,7 @@ user-->(Экспорт \n построенных графиков \n в нужн
 @enduml
 
 --------------------
-Class Diagraim
+Class Diagram
 --------------------
 
 -- a) Data-Controller
@@ -35,14 +35,21 @@ class DataList {
 class Controller {}
 hide Controller members
 
+class Case {
+  +dataList: DataList
+}
+hide Case method
+
 
 Controller -- ExpData
 Controller -- DataList
 
-ExpData "0..*" --o "1" DataList
+
+ExpData "*" --o "1" DataList
+DataList --* "1" Case
 Data --* "1"  ExpData
 @enduml
- 
+
 
 -- b) DB-AppUtils-Controller
 
@@ -60,8 +67,8 @@ class DAO {}
 hide DAO members
 
 class ApplicationUtils <<static>> {
-  readDataFromFile(): DTO
-  readApplictaionSettings(): void
+  +readDataFromFile(): DTO
+  +readApplictaionSettings(): void
 }
 hide ApplicationUtils fields
 
@@ -126,5 +133,104 @@ Operation <|.. Operation1
 Operation <|.. Operation2
 Operation "*" --o "1" OperationHistory
 
-Case "1" o-- OperationHistory
+Case "1" *-- OperationHistory
 @enduml
+
+
+--------------------
+Sequence diagram
+--------------------
+
+-- a) Построение графиков примера 
+
+@startuml
+participant Пользователь
+
+Пользователь -> ":Controller" : построить графики
+create ":OperationInvoker"
+activate ":Controller"
+":Controller" -> ":OperationInvoker" : инстанцировать
+":Controller" -> ":OperationInvoker" : setOperation(Operation1 x)
+activate ":OperationInvoker"
+":Controller" -> ":OperationInvoker" : execute()
+deactivate ":Controller"
+":OperationInvoker" -> ":Operation1" : execute() Operation1
+deactivate ":OperationInvoker"
+activate ":Operation1"
+":Operation1" --> ":Controller" : вернуть построенные графики
+deactivate ":Operation1"
+activate ":Controller"
+":Controller" -> ":Case" : getOperationHistory()
+deactivate ":Controller"
+activate ":Case"
+":Case" --> ":Controller" : вернуть поле operationHistory
+deactivate ":Case"
+activate ":Controller"
+":Controller" -> ":OperationHistory": push(Operation1 x)
+activate ":OperationHistory"
+":Controller" --> Пользователь : вернуть построенные графики
+deactivate ":Controller"
+deactivate ":OperationHistory"
+@enduml
+
+
+-- b) Сохранение примера из базы данных
+
+@startuml
+Пользователь -> ":Controller" : сохранить пример
+activate ":Controller"
+":Controller" -> ":Case" : getCase() 
+activate ":Case" 
+":Case" --> ":Controller" : вернуть экземпляр Case
+deactivate ":Case"
+create ":DAO"
+":Controller" -> ":DAO" : инстаницровать(Case)
+activate ":DAO"
+":DAO" --> ":Controller" : вернуть экземпляр DAO
+deactivate ":DAO"
+destroy ":DAO"
+":Controller" -> ":Database" : witeToDatabase(DAO)
+activate ":Database"
+deactivate ":Controller"
+":Database" --> Пользователь : запись завершена
+deactivate ":Database"
+@enduml
+
+
+-- c) Чтение экспериментальных данных
+
+@startuml
+Пользователь -> ":Controller" : добавить данные
+activate ":Controller"
+":Controller" -> ":ApplicationUtils" : readDataFromFile() 
+activate ":ApplicationUtils"
+deactivate ":Controller"
+create ":DTO"
+":ApplicationUtils" -> ":DTO" : инстаницровать прочитанными данными
+activate ":DTO"
+deactivate ":ApplicationUtils"
+":DTO" --> ":Controller" : вернуть DTO
+deactivate ":DTO"
+activate ":Controller"
+create ":ExpData"
+":Controller" -> ":ExpData" : инстанцировать(DTO)
+activate ":ExpData"
+deactivate ":Controller"
+destroy ":DTO"
+":ExpData" --> ":Controller" : вернуть экземпляр ExpData
+activate ":Controller"
+deactivate ":ExpData"
+":Controller" -> ":Case" : getDataList()
+activate ":Case"
+":Case" --> ":Controller" : вернуть поле dataList
+deactivate ":Case"
+":Controller" -> ":DataList" : addData(ExpData)
+deactivate ":Controller"
+activate ":DataList"
+":DataList" --> Пользователь : данные добавленны
+deactivate ":DataList"
+@enduml 
+
+
+
+

@@ -1,4 +1,4 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 \def\selectlanguageifdefined#1{
 \expandafter\ifx\csname date#1\endcsname\relax
 \else\selectlanguage{#1}\fi}
@@ -19,13 +19,13 @@ OpenFOAM Wikipedia. \BibDash
 
 \bibitem{OpenfoamUserGuide}
 \selectlanguageifdefined{russian}
-Официальный сайт OpenFOAM. User guide. \BibDash
+Официальный веб-сайт OpenFOAM. User guide. \BibDash
 \newblock URL: \BibUrl{https://cfd.direct/openfoam/user-guide/} ({дата
   обращения}: 08.05.2020).
 
 \bibitem{ParaviewAbout}
 \selectlanguageifdefined{russian}
-Официальный сайт Paraview. About. \BibDash
+Официальный веб-сайт Paraview. About. \BibDash
 \newblock URL: \BibUrl{https://www.paraview.org/overview/} ({дата
   обращения}: 08.05.2020).
 
@@ -37,28 +37,51 @@ Paraview. Wikipedia. \BibDash
 
 \bibitem{ParaviewAndPython}
 \selectlanguageifdefined{russian}
-Официальный сайт Paraview. Paraview and Python. \BibDash
+Официальный веб-сайт Paraview. Paraview and Python. \BibDash
 \newblock URL: \BibUrl{https://www.paraview.org/Wiki/ParaView_and_Python}
   ({дата обращения}: 08.05.2020).
 
 \bibitem{Helyx}
 \selectlanguageifdefined{russian}
-Официальный сайт Helyx. Products. Helyx OS. \BibDash
+Официальный веб-сайт Helyx. Products. Helyx OS. \BibDash
 \newblock URL: \BibUrl{https://engys.com/products/helyx-os} ({дата
   обращения}: 10.05.2020).
 
 \bibitem{Ansa}
 \selectlanguageifdefined{russian}
-Официальный сайт компании Beta. Продукт ANSA.
-  \BibDash
+Официальный веб-сайт компании Beta. Продукт
+  ANSA. \BibDash
 \newblock URL: \BibUrl{http://www.beta-cae.gr/ansa.htm} ({дата
   обращения}: 11.05.2020).
 
 \bibitem{umlDistilled}
 \selectlanguageifdefined{russian}
-\BibEmph{Фаулер,~Мартин}. UML. Основы, 3-е издание.
+\BibEmph{Мартин,~Фаулер}. UML. Основы, 3-е издание.
   \BibDash
-\newblock Спб:Символ-Плюс, 2004. \BibDash
+\newblock Спб: Символ-Плюс, 2004. \BibDash
 \newblock 192~{с.}
+
+\bibitem{oop}
+\selectlanguageifdefined{russian}
+Приемы объектно-ориентированного
+  проектирования~/ Гамма~Э., Хелм~Р.,
+  Джонсон~Р., Влиссидес~Д. \BibDash
+\newblock Спб: Питер, 2019. \BibDash
+\newblock 368~{с.}
+
+\bibitem{pattern}
+\selectlanguageifdefined{russian}
+Веб-сайт refactoring guru. Паттерны
+  проектирования. Команда. \BibDash
+\newblock URL: \BibUrl{https://refactoring.guru/ru/design-patterns/command}
+  ({дата обращения}: 19.05.2020).
+
+\bibitem{umlApplying}
+\selectlanguageifdefined{russian}
+\BibEmph{Крэг,~Ларман}. Применение UML 2.0 и
+  шаблонов проектирования. Практическое
+  руководство. 3-е издание. \BibDash
+\newblock М: И.Д. Вильямс, 2013. \BibDash
+\newblock 736~{с.}
 
 \end{thebibliography}
