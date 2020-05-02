@@ -184,12 +184,12 @@ activate ":Case"
 ":Case" --> ":Controller" : вернуть экземпляр Case
 deactivate ":Case"
 create ":DAO"
-":Controller" -> ":DAO" : инстаницровать(Case)
+":Controller" -> ":DAO" : new DAO(case)
 activate ":DAO"
 ":DAO" --> ":Controller" : вернуть экземпляр DAO
 deactivate ":DAO"
 destroy ":DAO"
-":Controller" -> ":Database" : witeToDatabase(DAO)
+":Controller" -> ":Database" : writeToDatabase(dataFromDAO)
 activate ":Database"
 deactivate ":Controller"
 ":Database" --> Пользователь : запись завершена
@@ -206,14 +206,14 @@ activate ":Controller"
 activate ":ApplicationUtils"
 deactivate ":Controller"
 create ":DTO"
-":ApplicationUtils" -> ":DTO" : инстаницровать прочитанными данными
+":ApplicationUtils" -> ":DTO" : new DTO(dataFromFile)
 activate ":DTO"
 deactivate ":ApplicationUtils"
 ":DTO" --> ":Controller" : вернуть DTO
 deactivate ":DTO"
 activate ":Controller"
 create ":ExpData"
-":Controller" -> ":ExpData" : инстанцировать(DTO)
+":Controller" -> ":ExpData" : new ExpData(dataFromDTO)
 activate ":ExpData"
 deactivate ":Controller"
 destroy ":DTO"
@@ -229,8 +229,7 @@ deactivate ":Controller"
 activate ":DataList"
 ":DataList" --> Пользователь : данные добавленны
 deactivate ":DataList"
-@enduml 
-
+@enduml
 
 
 
