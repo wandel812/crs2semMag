@@ -1,7 +1,18 @@
 --------------------
 UseCase Diagram 
 --------------------
+new 
+______________________________________________
+@startuml
+actor "Пользователь" as user
+user-->(Сохр./Загр. \n примера из БД)
+user-->(Добавл./Удал. \n источника данных \n из примера)
+user-->(Построение \n графиков примера)
+user-->(Редактирвоание \n угла обзора \n графиков)
+@enduml
 
+old
+__________________________________________
 @startuml
 actor "Пользователь" as user
 user-->(Сохр./Загр. \n примера из БД)
@@ -13,8 +24,10 @@ user-->(Экспорт \n построенных графиков \n в нужн
 --------------------
 Class Diagram
 --------------------
+old ver
+_________________________________________
 
--- a) Data-Controller
+--------------------------------------------------- a) Data-Controller, model
 
 @startuml
 class Data {}
@@ -50,8 +63,118 @@ DataList --* "1" Case
 Data --* "1"  ExpData
 @enduml
 
+new ver
+___________________________
+@startuml
+class Point{
+  +x: float
+  +y: float
+  +z: float
+}
 
--- b) DB-AppUtils-Controller
+
+class CameraProps{
+  +idn: int
+  +name: str
+  +focal_point: Point
+  +cam_position: Point
+  +viewup: Point
+  +viewangle: float
+}
+
+class CasesDir{
+  +idn: int
+  +path: Path
+}
+
+class FoamCase{
+  +idn: int
+  +name: str
+  +cases_dir: CaseDir
+  +cam_prop_list: List[CameraoProps]
+}
+
+class Controller {}
+hide Controller members
+
+class SharedState {
+  +case_list: List[FoamCase]
+  +state1
+  +state2
+  + ...
+}
+
+
+Controller -- FoamCase
+SharedState --o Controller
+
+Point -- CameraProps
+FoamCase "*" --o "1" SharedState
+CasesDir "1" --* "1" FoamCase
+CameraProps "*" --* "1" FoamCase
+@enduml
+
+-------------------------------------------- b) DB-AppUtils-Controller, dao
+new
+______________________________________
+@startuml
+abstract class DaoFactory{
+    - DBConnection _get_connection()
+    + AbstractDAO get_dao(connection, dao_class)
+}
+
+class MongoDaoFactory {
+    - LOGIN
+    - PASSWORD
+    - MongoDBConnection MongoDBConnection _get_connection()
+    + MongoAbstractDAO MongoDget_dao(connection, dao_class)
+}
+
+class Config {}
+hide Config members
+
+
+class Controller {}
+hide Controller members
+
+abstract class AbstractDAO{
+    +connection
+    +Any create(obj)
+    +Any create_or_update(obj)
+    +Any read(key)
+    +Any update(obj)
+    +Any delete(key)
+    +List[Any] get_all()
+}
+
+abstract class MongoAbstractDAO{
+    +Any delete(key): implemented
+    +Any get_all(): implemented
+}
+
+class MongoFoamCaseDAO{}
+hide MongoFoamCaseDAO members
+
+class MongoCaseDirDAO{}
+hide MongoCaseDirDAO members
+
+class MongoCameraPropsDAO{}
+hide MongoCameraPropsDAO members
+
+
+DaoFactory <|-- MongoDaoFactory
+Config ..> MongoDaoFactory: inject LOGIN, PASSWORD
+Controller -- DaoFactory
+Controller -- AbstractDAO
+DaoFactory --> AbstractDAO
+AbstractDAO <|-- MongoAbstractDAO
+MongoAbstractDAO <|--MongoFoamCaseDAO
+MongoAbstractDAO <|--MongoCaseDirDAO
+MongoAbstractDAO <|--MongoCameraPropsDAO
+@enduml
+
+old
+____________________________
 
 @startuml
 class Controller {}
@@ -82,8 +205,51 @@ Controller "1" o-- Database
 @enduml
 
 
--- c) Case-Operaion-Controller
+----------------------------------------------------------------------------- c) Case-Operaion-Controller, view
+new
+____________________________________
+@startuml
+class ControlList {
++on_add_button_clicked()
++on_rm_button_clicked
++on_item_selection
 
++header
++list_
+
+}
+
+class TextEdit {
+   + label
+   + text_edit
+   some callbacks ...
+}
+class PointTextEdit{}
+hide PointTextEdit members
+class CameraParamsForm {}
+hide CameraParamsForm members
+class Button {}
+hide Button members
+class SaveResetButtonGroup {}
+hide SaveResetButtonGroup members
+class MainWidget {}
+hide MainWidget members
+class Controller {}
+hide Controller members
+
+
+MainWidget o-- SaveResetButtonGroup
+MainWidget o-- Button
+MainWidget o-- TextEdit
+MainWidget o-- CameraParamsForm
+CameraParamsForm o-- PointTextEdit
+CameraParamsForm o-- ControlList
+Controller -- MainWidget
+Controller -- CameraParamsForm
+@enduml
+
+old
+________________________________
 @startuml
 class Case {
   -id: int
@@ -141,8 +307,34 @@ Case "1" *-- OperationHistory
 Sequence diagram
 --------------------
 
--- a) Построение графиков примера 
+------------------------------------------------------------------------------ a) Построение графиков примера 
+new _______________________________________________________________________
+@startuml
+participant Пользователь
 
+Пользователь -> ":Controller" : построить графики
+create ":Screenshot"
+activate ":Controller"
+":Controller" -> ":Screenshot" : обратиться к классу
+":Controller" -> ":Screenshot" : take_screenshot(cases_list, output)
+activate ":Screenshot"
+deactivate ":Controller"
+":Screenshot" -> ":FoamCase" : get_data()
+activate ":FoamCase"
+":FoamCase" --> ":Screenshot" : вернуть data
+deactivate ":FoamCase"
+":Screenshot" -> ":ParaView" : set_data()
+activate ":ParaView"
+":Screenshot" -> ":ParaView" : show()
+":ParaView" -> ":Screenshot" : вернуть графики
+":Screenshot" -> ":ParaView": сохранить графики
+deactivate ":Screenshot"
+":ParaView" -> Пользователь: вернуть файлы с построенными графиками
+deactivate ":ParaView"
+@enduml
+
+
+old _______________________________________________________________________
 @startuml
 participant Пользователь
 
@@ -174,7 +366,26 @@ deactivate ":OperationHistory"
 @enduml
 
 
--- b) Сохранение примера из базы данных
+
+
+---------------------------------------------------------------------------------- b) Сохранение примера из базы данных
+new
+______________________________________________-
+@startuml
+Пользователь -> ":Controller" : сохранить пример
+":Controller" -> ":MongoDaoFactory" : get_dao() 
+activate ":MongoDaoFactory"
+":MongoDaoFactory" -> ":Controller" : инстанцировать и вернуть экземпляр MongoFoamCaseDAO
+deactivate ":MongoDaoFactory"
+":Controller" -> ":MongoFoamCaseDAO": create_or_update(case)
+activate ":MongoFoamCaseDAO"
+":MongoFoamCaseDAO" -> ":Controller": успех
+deactivate ":MongoFoamCaseDAO"
+":Controller" -> Пользователь: запись завершена
+deactivate ":Controller"
+@enduml
+old
+______________________________________________
 
 @startuml
 Пользователь -> ":Controller" : сохранить пример
@@ -197,8 +408,45 @@ deactivate ":Database"
 @enduml
 
 
--- c) Чтение экспериментальных данных
+------------------------------------------------------------------ c) Чтение/добавление экспериментальных данных
+new
+_______________________________________________________
+@startuml
+Пользователь -> ":Controller" : добавить данные
+activate ":Controller"
+":Controller" -> ":CasesDir" : инстанцирует casesdir
+":CasesDir" -> ":Controller" : возвращает casesdir
+":Controller" -> ":FoamCase" : инстанцирует foamcase(casedir)
+activate ":FoamCase"
+":FoamCase" -> ":Controller" : возвращает foamcase
+deactivate ":FoamCase"
+":Controller" -> ":SharedState" : case_list().append(foamcase)
+activate ":SharedState"
+":SharedState" -> ":Controller" : успех
+deactivate ":SharedState"
+":Controller" -> Пользователь : add_item(foamcase.name)
+deactivate ":FoamCase"
+deactivate ":ControlList"
+deactivate ":CasesDir"
+":Controller" -> ":SharedState" : get_selected_case() 
+activate ":SharedState"
+":SharedState" -> ":Controller" : возвращает выбранный foamcase
+deactivate ":SharedState"
+":Controller" -> ":CameraProps" : инстанцирует camprop
+activate ":CameraProps"
+":CameraProps" -> ":Controller" : возвращает экземпляр camprop
+deactivate ":CameraProps"
+":Controller" -> ":SharedState" : foamcase.cam_prop_list.append(camprop)
+activate ":SharedState"
+":SharedState" -> ":Controller" : успех
+deactivate ":SharedState"
+":Controller" -> Пользователь : add_item(foamcase.name)
+deactivate ":Controller"
+@enduml
 
+
+old
+______________________________________________________________________
 @startuml
 Пользователь -> ":Controller" : добавить данные
 activate ":Controller"
@@ -230,6 +478,8 @@ activate ":DataList"
 ":DataList" --> Пользователь : данные добавленны
 deactivate ":DataList"
 @enduml
+
+
 
 
 
