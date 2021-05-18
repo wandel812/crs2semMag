@@ -2,7 +2,6 @@ import configparser
 from pathlib import Path
 from typing import List
 
-# gui generator config -------------------------------------------------------------------------------------------------
 from foampostproc.utils import PROJ_DIR
 
 CONFIG_PATH = PROJ_DIR / Path("config/app.ini")
@@ -49,7 +48,8 @@ class ConfigSectionProxy:
 
     def get_path(self, option: str) -> Path:
         option_path = Path(self.__section_proxy.get(option))
-        use_prefix = self._common_section_config.getboolean(self.USE_PROJ_PREFIX_FOR_PATHS)
+        use_prefix = self._common_section_config.getboolean(
+            self.USE_PROJ_PREFIX_FOR_PATHS)
         return Path(PROJ_DIR) / option_path if use_prefix else option_path
 
     def get_list(self, option: str) -> List[str]:

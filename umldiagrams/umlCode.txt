@@ -213,7 +213,6 @@ class ControlList {
 +on_add_button_clicked()
 +on_rm_button_clicked
 +on_item_selection
-
 +header
 +list_
 
@@ -426,7 +425,6 @@ activate ":SharedState"
 deactivate ":SharedState"
 ":Controller" -> Пользователь : add_item(foamcase.name)
 deactivate ":FoamCase"
-deactivate ":ControlList"
 deactivate ":CasesDir"
 ":Controller" -> ":SharedState" : get_selected_case() 
 activate ":SharedState"
